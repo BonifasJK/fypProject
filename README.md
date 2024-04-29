@@ -14,3 +14,5 @@ DEPENDENCE REQUIRED TO INSTALL
   change port no to 3307 and at line which shows "myisam_sort_buffer_size=8M" below it add this "innodb_force_recovery=1" then save and restart all servers
 10. setup for mysql in django is 
 ->port 3307
+
+All the above important to install is BizLand, jazzmin so far i used those two
