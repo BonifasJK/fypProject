@@ -31,7 +31,7 @@ class Units(models.Model):
 
 class Risk_reported(models.Model):
     Title = models.CharField(max_length=100)
-    Reporter = models.ForeignKey(Users.Fullname,on_delete=models.CASCADE)
+    # Reporter = models.ForeignKey(Users.Fullname,on_delete=models.CASCADE)
 
 
 class Users(models.Model):
