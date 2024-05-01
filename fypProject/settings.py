@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'udsm_risk_register',
     'ckeditor',
+    'django.contrib.postgres',
     
 ]
 
@@ -82,12 +83,12 @@ DATABASES = {
     {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'RiskDB',
-        'USER': 'root',
-        'PASSWORD' : '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'riskdb',
+        'USER': 'postgres',
+        'PASSWORD' : 'risk@0601',
         'HOST':'127.0.0.1',
-        'PORT':'3307',
+        'PORT':'5432',
     }
 }
 
