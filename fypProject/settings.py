@@ -42,10 +42,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'udsm_risk_register',
+<<<<<<< HEAD
     
     'crispy_forms',
     'django_dyn_dt',
+=======
+    'ckeditor',
+    'django.contrib.postgres',
+>>>>>>> refs/remotes/origin/main
     
+    'crispy_forms',
+    'django_dyn_dt',
+   
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
@@ -92,14 +100,32 @@ WSGI_APPLICATION = 'fypProject.wsgi.application'
 DATABASES = {
     'default': 
     {
+<<<<<<< HEAD
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+=======
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'riskdb',
+        'USER': 'postgres',
+        'PASSWORD' : 'risk@0601',
+        'HOST':'127.0.0.1',
+        'PORT':'5432',
+
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+>>>>>>> refs/remotes/origin/main
         # 'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'RiskDB',
         # 'USER': 'root',
         # 'PASSWORD' : '',
         # 'HOST':'127.0.0.1',
         # 'PORT':'3306',
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/origin/main
     }
 }
 

@@ -1,4 +1,6 @@
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
+from django.db.models import Count
 
 # Create your models here.
 UnitList = (
@@ -29,11 +31,26 @@ StatusList = (
     ('Pending','Pending'),
     ('Rejected','Rejected'),
 )
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> refs/remotes/origin/main
 
 
 
-class Units(models.Model):
-    Units = models.CharField(max_length=100,primary_key=True,choices=UnitList)
+
+class Unit(models.Model):
+    Unit_id = models.AutoField(primary_key=True)
+    Units = models.CharField(max_length=100,choices=UnitList)
+    
+# Risk table added
+class Risk(models.Model):
+    reporter=models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20,choices=Role)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)  # Link to Department model
+    status = models.CharField(max_length=10,choices=StatusList)
+    last_updated = models.DateTimeField(auto_now=True)
     
 # Risk table added
 class Risk(models.Model):
@@ -45,13 +62,25 @@ class Risk(models.Model):
     last_updated = models.CharField(max_length=20)
     
 
-class Risk_reported(models.Model):
-    Title = models.CharField(max_length=100)
-    # Reporter = models.ForeignKey(Users.Fullname,on_delete=models.CASCADE)
 
+class User(AbstractUser):
+    id = models.AutoField(primary_key=True, default=None)
+    fullname = models.CharField(max_length=200, default=None)
+    role = models.CharField(max_length=25,choices=Role, default=None)
+    unit = models.ForeignKey(Unit,on_delete=models.CASCADE, default=None)
+    
+    
+    @property
+    def TotalRisk(self):
+        return self.risk_set.count() 
 
-class Users(models.Model):
-    Fullname = models.CharField(max_length=200,primary_key=True)
-    JobTitle = models.CharField(max_length=25,choices=Role)
-    Department = models.ForeignKey(Units,on_delete=models.CASCADE)
-    TotalRisk = models.ForeignKey(Risk_reported,on_delete=models.CASCADE) 
+    class Meta:
+    
+        db_table = 'auth_user'
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
+        swappable = 'AUTH_USER_MODEL'
+        ordering = ['Fullname']
+
+    def __str__(self):
+        return self.Fullname
