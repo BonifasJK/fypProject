@@ -11,7 +11,7 @@ class UnitsAdmin(admin.ModelAdmin):
 admin.site.register(models.Units, UnitsAdmin)
 class UsersAdmin(admin.ModelAdmin):
     list_display = ('Fullname','JobTitle','Unit','TotalRisk')
-admin.site.register(models.Users, UsersAdmin)
+admin.site.register(models.User, UsersAdmin)
     
 
     
