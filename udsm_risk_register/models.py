@@ -25,11 +25,27 @@ Role = (
     ('RiskChampion','RiskChampion'),
 )
 
+StatusList = (
+    ('Active','Active'),
+    ('Pending','Pending'),
+    ('Rejected','Rejected'),
+)
+
+
 
 
 class Units(models.Model):
     Unit_id = models.AutoField(primary_key=True, default=None)
     Units = models.CharField(max_length=100,choices=UnitList)
+    
+# Risk table added
+class Risk(models.Model):
+    username = models.CharField(max_length=20)
+    job_title = models.CharField(max_length=20,choices=Role)
+    department = models.ForeignKey(Units, on_delete=models.CASCADE)  # Link to Department model
+    total_risks = models.IntegerField()
+    status = models.CharField(max_length=10,choices=StatusList)
+    last_updated = models.CharField(max_length=20)
     
 
 class Risk_reported(models.Model):
