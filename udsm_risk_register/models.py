@@ -27,16 +27,18 @@ Role = (
 
 
 class Units(models.Model):
-    Units = models.CharField(max_length=100,primary_key=True,choices=UnitList)
+    Unit_id = models.AutoField(primary_key=True, default=None)
+    Units = models.CharField(max_length=100,choices=UnitList)
     
 
 class Risk_reported(models.Model):
-    Title = models.CharField(max_length=100, choices=Risks)
+    Title = models.CharField(max_length=100)
     # Reporter = models.ForeignKey(Users.Fullname,on_delete=models.CASCADE)
 
 
 class Users(models.Model):
-    Fullname = models.CharField(max_length=200,primary_key=True)
-    JobTitle = models.CharFrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrield(max_length=25,choices=Role)
-    Department = models.ForeignKey(Units,on_delete=models.CASCADE)
-    TotalRisk = models.ForeignKey(Risk_reported,on_delete=models.CASCADE) 
+    id = models.AutoField(primary_key=True, default=None)
+    Fullname = models.CharField(max_length=200, default=None)
+    JobTitle = models.CharField(max_length=25,choices=Role, default=None)
+    Unit = models.ForeignKey(Units,on_delete=models.CASCADE, default=None)
+    TotalRisk = models.ForeignKey(Risk_reported,on_delete=models.CASCADE, default=None) 
