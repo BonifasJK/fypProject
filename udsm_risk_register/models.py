@@ -1,5 +1,6 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
+from django.db.models import Count
 
 # Create your models here.
 UnitList = (
@@ -34,37 +35,33 @@ StatusList = (
 
 
 
-class Units(models.Model):
-    Unit_id = models.AutoField(primary_key=True, default=None)
+class Unit(models.Model):
+    Unit_id = models.AutoField(primary_key=True)
     Units = models.CharField(max_length=100,choices=UnitList)
     
 # Risk table added
 class Risk(models.Model):
-    username = models.CharField(max_length=20)
-    job_title = models.CharField(max_length=20,choices=Role)
-    department = models.ForeignKey(Units, on_delete=models.CASCADE)  # Link to Department model
-    total_risks = models.IntegerField()
+    reporter=models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20,choices=Role)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)  # Link to Department model
     status = models.CharField(max_length=10,choices=StatusList)
-    last_updated = models.CharField(max_length=20)
+    last_updated = models.DateTimeField(auto_now=True)
     
-
-class Risk_reported(models.Model):
-    Title = models.CharField(max_length=100)
-    # Reporter = models.ForeignKey(Users.Fullname,on_delete=models.CASCADE)
 
 
 class User(AbstractUser):
     id = models.AutoField(primary_key=True, default=None)
-    Fullname = models.CharField(max_length=200, default=None)
-    Role = models.CharField(max_length=25,choices=Role, default=None)
-    Unit = models.ForeignKey(Units,on_delete=models.CASCADE, default=None)
-    TotalRisk = models.ForeignKey(Risk_reported,on_delete=models.CASCADE, default=None) 
+    fullname = models.CharField(max_length=200, default=None)
+    role = models.CharField(max_length=25,choices=Role, default=None)
+    unit = models.ForeignKey(Unit,on_delete=models.CASCADE, default=None)
     
+    
+    @property
+    def TotalRisk(self):
+        return self.risk_set.count() 
+
     class Meta:
-        # Specify a unique related_name for the groups field
-        # This will prevent clashes with the default User model
-        # You can choose any unique name you prefer
-        # For example, 'custom_groups'
+    
         db_table = 'auth_user'
         verbose_name = 'user'
         verbose_name_plural = 'users'
