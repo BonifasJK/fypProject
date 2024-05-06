@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os, inspect
+import django_dyn_dt
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,9 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'udsm_risk_register',
-    'ckeditor',
+    
+    'crispy_forms',
+    'django_dyn_dt',
     
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,10 +63,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'fypProject.urls'
 
+TEMPLATE_DIR_DATATB = os.path.join(BASE_DIR, "django_dyn_dt/templates")
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/"templates"],
+        'DIRS': [BASE_DIR/"templates",
+                 TEMPLATE_DIR_DATATB, #For datatb                 
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,14 +92,14 @@ WSGI_APPLICATION = 'fypProject.wsgi.application'
 DATABASES = {
     'default': 
     {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'RiskDB',
-        'USER': 'root',
-        'PASSWORD' : '',
-        'HOST':'127.0.0.1',
-        'PORT':'3307',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'RiskDB',
+        # 'USER': 'root',
+        # 'PASSWORD' : '',
+        # 'HOST':'127.0.0.1',
+        # 'PORT':'3306',
     }
 }
 
@@ -127,6 +139,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+DYN_DB_PKG_ROOT = os.path.dirname( inspect.getfile( django_dyn_dt ) ) # <-- NEW App
+
+STATICFILES_DIRS = (
+    os.path.join(DYN_DB_PKG_ROOT, "templates/static"),
+)
 
 
 # Default primary key field type
@@ -237,6 +255,8 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+        "udsm_risk_register.Users": "fas fa-users",
+        "udsm_risk_register.Units": "fas fa-building",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -305,4 +325,10 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
         "success": "btn-success"
     }
+}
+
+DYNAMIC_DATATB = {
+    # SLUG -> Import_PATH 
+    'risk'  : "udsm_risk_register.models.Risk",
+    'report'  : "udsm_risk_register.models.Report",
 }
