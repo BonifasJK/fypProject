@@ -31,11 +31,7 @@ StatusList = (
     ('Pending','Pending'),
     ('Rejected','Rejected'),
 )
-<<<<<<< HEAD
 
-
-=======
->>>>>>> refs/remotes/origin/main
 
 
 
@@ -52,17 +48,6 @@ class Risk(models.Model):
     status = models.CharField(max_length=10,choices=StatusList)
     last_updated = models.DateTimeField(auto_now=True)
     
-# Risk table added
-class Risk(models.Model):
-    username = models.CharField(max_length=20)
-    job_title = models.CharField(max_length=20,choices=Role)
-    department = models.ForeignKey(Units, on_delete=models.CASCADE)  # Link to Department model
-    total_risks = models.IntegerField()
-    status = models.CharField(max_length=10,choices=StatusList)
-    last_updated = models.CharField(max_length=20)
-    
-
-
 class User(AbstractUser):
     id = models.AutoField(primary_key=True, default=None)
     fullname = models.CharField(max_length=200, default=None)
