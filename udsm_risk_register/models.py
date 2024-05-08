@@ -98,7 +98,7 @@ class User(AbstractUser):
 
 # Risk table added
 class Risk(models.Model):
-    id = models.CharField(primary_key=True, choices=ids)
+    id = models.CharField(primary_key=True, max_length=10, choices=ids)
     title = models.CharField(max_length=200)
     Description = models.CharField(max_length=400)
     Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE)
