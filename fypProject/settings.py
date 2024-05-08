@@ -42,18 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'udsm_risk_register',
-
-    
     'crispy_forms',
     'django_dyn_dt',
-
     'ckeditor',
     'django.contrib.postgres',
-
-    
-    'crispy_forms',
-    'django_dyn_dt',
-   
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
@@ -107,9 +99,9 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'riskdb',
-        'USER': 'postgres',
-        'PASSWORD' : 'risk@0601',
+        'NAME': 'riskdatabase',
+        'USER': 'riskadmin',
+        'PASSWORD' : 'risk@123',
         'HOST':'127.0.0.1',
         'PORT':'5432',
 
