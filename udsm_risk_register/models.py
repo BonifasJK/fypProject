@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Count
 from django.conf import settings
@@ -41,10 +41,19 @@ impacts = (
     ('Very Low', 'Very Low'),
 )
 
+ids = (
+    ('C1', 'C1'),
+    ('C2', 'C2'),
+    ('C3', 'C3'),
+    ('C4', 'C4'),
+)
 
 class Unit(models.Model):
     Unit_id = models.AutoField(primary_key=True)
     Units = models.CharField(max_length=100, choices=UnitList)
+
+    def __str__(self):
+        return self.Units
 
 
 class Mitigation(models.Model):
@@ -53,11 +62,17 @@ class Mitigation(models.Model):
     effectiveness = models.CharField(max_length=400)
     weakness = models.CharField(max_length=400)
 
+    def __str__(self):
+        return self.mitigation
+
 
 class RiskDetails(models.Model):
     id = models.AutoField(primary_key=True)
     Causes = models.CharField(max_length=400)
     consequences = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.Causes
 
 
 class User(AbstractUser):
@@ -83,7 +98,7 @@ class User(AbstractUser):
 
 # Risk table added
 class Risk(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.CharField(primary_key=True, choices=ids)
     title = models.CharField(max_length=200)
     Description = models.CharField(max_length=400)
     Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE)
@@ -93,6 +108,23 @@ class Risk(models.Model):
     mitigation = models.ForeignKey(Mitigation, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=StatusList)
     last_updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.id == 'C1':
+            self.title = 'Risk1'
+        elif self.id == 'C2':
+            self.title = 'Risk2'
+        elif self.id == 'C3':
+            self.title = 'Risk2'
+        elif self.id == 'C4':
+            self.title = 'Risk2'
+        else :
+            self.title = None
+        
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.id
 
 
 

@@ -347,3 +347,6 @@ DYNAMIC_DATATB = {
     'risk'  : "udsm_risk_register.models.Risk",
     'report'  : "udsm_risk_register.models.Report",
 }
+
+MIGRATION_MODULES = {}
+
