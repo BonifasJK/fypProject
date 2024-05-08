@@ -44,8 +44,24 @@ INSTALLED_APPS = [
     'udsm_risk_register',
     'crispy_forms',
     'django_dyn_dt',
+<<<<<<< HEAD
+=======
+
+<<<<<<< HEAD
+    # 'ckeditor',
+=======
+>>>>>>> 1c8e8a37e4d83ed7c4c38aab8a841a058eeb5f29
     'ckeditor',
+>>>>>>> origin/main
     'django.contrib.postgres',
+<<<<<<< HEAD
+=======
+
+    
+    # 'crispy_forms',
+    # 'django_dyn_dt',
+   
+>>>>>>> 1c8e8a37e4d83ed7c4c38aab8a841a058eeb5f29
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
@@ -93,6 +109,21 @@ DATABASES = {
     'default': 
     {
 
+<<<<<<< HEAD
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': 'riskdb',
+        #'USER': 'postgres',
+        #'PASSWORD' : 'risk@0601',
+        #'HOST':'127.0.0.1',
+        #'PORT':'5432',
+
+        
+=======
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': BASE_DIR / 'db.sqlite3',
 
@@ -115,6 +146,7 @@ DATABASES = {
         # 'HOST':'127.0.0.1',
         # 'PORT':'3306',
 
+>>>>>>> origin/main
     }
 }
 
