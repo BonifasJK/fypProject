@@ -99,17 +99,12 @@ DATABASES = {
     'default': 
     {
 
-
-       
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'riskdatabase',
         'USER': 'riskadmin',
         'PASSWORD' : 'risk@123',
         'HOST':'127.0.0.1',
-        'PORT':'5432',
-
-       
-      
+        'PORT':'5432',   
 
 }
 }
@@ -168,10 +163,10 @@ JAZZMIN_SETTINGS = {
     "site_title": "",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "RISK REGISTER",
+    "site_header": "RISK MANAGEMENT",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "RISK REGISTER",
+    "site_brand": "RISK MANAGEMENT",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     # "site_logo": "books/img/logo.png",
@@ -189,10 +184,10 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome text on the login screen
-    "welcome_sign": "RISK REGISTER",
+    "welcome_sign": "RISK MANAGEMENT",
 
     # Copyright on the footer
-    "copyright": "RISK REGISTER",
+    "copyright": "RISK MANAGEMENT UNIT",
 
     # List of model admins to search from the search bar, search bar omitted if excluded
     # If you want to use a single search field you dont need to use a list, you can use a simple string 

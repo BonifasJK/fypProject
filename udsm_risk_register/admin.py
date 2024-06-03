@@ -1,8 +1,22 @@
 from django.contrib import admin
 from . import models
-from .models import Mitigation, RiskDetails
+from .models import Mitigation, RiskDetails, User
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
-# Register your models here.
+class CustomUserAdmin(UserAdmin):
+    model = User
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {
+            'fields': ('username', 'password1', 'password2', 'fullname', 'role', 'unit'),
+        }),
+    )
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('fullname', 'role', 'unit')}),
+    )
+    list_display = ['username', 'email', 'fullname', 'role', 'unit']
+
+admin.site.register(User, CustomUserAdmin)
 
 class RiskAdmin(admin.ModelAdmin):
     # To Sett Pagination
@@ -18,11 +32,6 @@ class UnitsAdmin(admin.ModelAdmin):
     list_max_show_all = 6
     list_display = ('Units',)
 admin.site.register(models.Unit, UnitsAdmin)
-
-
-class UsersAdmin(admin.ModelAdmin):
-    list_display = ('fullname','role','Unit','total_risks')
-admin.site.register(models.User, UsersAdmin)
 
 admin.site.register(Mitigation)
 admin.site.register(RiskDetails)

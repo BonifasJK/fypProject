@@ -30,7 +30,7 @@ Role = (
 StatusList = (
     ('Active', 'Active'),
     ('Pending', 'Pending'),
-    ('Rejected', 'Rejected'),
+    ('Completed', 'Completed'),
 )
 
 impacts = (
@@ -98,7 +98,6 @@ class User(AbstractUser):
 
 # Risk table added
 class Risk(models.Model):
-    id = models.CharField(primary_key=True, max_length=10, choices=ids)
     title = models.CharField(max_length=200)
     Description = models.CharField(max_length=400)
     Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE)
@@ -109,22 +108,8 @@ class Risk(models.Model):
     status = models.CharField(max_length=10, choices=StatusList)
     last_updated = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        if self.id == 'C1':
-            self.title = 'Risk1'
-        elif self.id == 'C2':
-            self.title = 'Risk2'
-        elif self.id == 'C3':
-            self.title = 'Risk2'
-        elif self.id == 'C4':
-            self.title = 'Risk2'
-        else :
-            self.title = None
-        
-        super().save(*args, **kwargs)
-
     def __str__(self):
-        return self.id
+        return self.title
 
 
 
