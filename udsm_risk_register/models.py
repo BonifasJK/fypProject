@@ -1,8 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import Count
 from django.conf import settings
-
 
 UnitList = (
     ('Human Resource', 'Human Resource'),
@@ -55,7 +53,6 @@ class Unit(models.Model):
     def __str__(self):
         return self.Units
 
-
 class Mitigation(models.Model):
     id = models.AutoField(primary_key=True)
     mitigation = models.CharField(max_length=400)
@@ -65,7 +62,6 @@ class Mitigation(models.Model):
     def __str__(self):
         return self.mitigation
 
-
 class RiskDetails(models.Model):
     id = models.AutoField(primary_key=True)
     Causes = models.CharField(max_length=400)
@@ -74,10 +70,8 @@ class RiskDetails(models.Model):
     def __str__(self):
         return self.Causes
 
-
 class User(AbstractUser):
     id = models.AutoField(primary_key=True, default=None)
-    fullname = models.CharField(max_length=200, default=None)
     role = models.CharField(max_length=25, choices=Role, default=None)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, default=None)
 
@@ -90,13 +84,11 @@ class User(AbstractUser):
         verbose_name = 'user'
         verbose_name_plural = 'users'
         swappable = 'AUTH_USER_MODEL'
-        ordering = ['fullname']
+        ordering = ['last_name', 'first_name']
 
     def __str__(self):
-        return self.fullname
+        return self.get_full_name()
 
-
-# Risk table added
 class Risk(models.Model):
     title = models.CharField(max_length=200)
     Description = models.CharField(max_length=400)
@@ -109,7 +101,7 @@ class Risk(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        return f"{self.title} reported by {self.reporter.get_full_name()}"
 
 
 
