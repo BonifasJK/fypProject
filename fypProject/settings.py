@@ -341,3 +341,4 @@ DYNAMIC_DATATB = {
 
 MIGRATION_MODULES = {}
 
+AUTH_USER_MODEL = 'udsm_risk_register.User'

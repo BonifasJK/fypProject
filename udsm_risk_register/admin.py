@@ -24,6 +24,8 @@ class CustomUserAdmin(BaseUserAdmin):
     )
     fieldsets = (
         (None, {'fields': ('username', 'password', 'first_name', 'last_name', 'role', 'unit')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     list_display = ['username', 'email', 'get_full_name', 'role', 'unit']
     
@@ -130,8 +132,8 @@ class RiskAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path('export/excel/', self.admin_site.admin_view(export_all_as_excel), name='admin:risk_export_excel'),
-            path('export/pdf/', self.admin_site.admin_view(export_all_as_pdf), name='admin:risk_export_pdf'),
+        path('export/excel/', self.admin_site.admin_view(export_all_as_excel), name='risk_export_excel'),
+        path('export/pdf/', self.admin_site.admin_view(export_all_as_pdf), name='risk_export_pdf'),
         ]
         return custom_urls + urls
 

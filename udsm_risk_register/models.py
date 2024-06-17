@@ -47,7 +47,7 @@ ids = (
 )
 
 class Unit(models.Model):
-    Unit_id = models.AutoField(primary_key=True)
+    Unit_id = models.AutoField(primary_key=True, null=False)
     Units = models.CharField(max_length=100, choices=UnitList)
 
     def __str__(self):
@@ -72,8 +72,8 @@ class RiskDetails(models.Model):
 
 class User(AbstractUser):
     id = models.AutoField(primary_key=True, default=None)
-    role = models.CharField(max_length=25, choices=Role, default=None)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, default=None)
+    role = models.CharField(max_length=25, choices=Role, null=True)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True)
 
     @property
     def TotalRisk(self):
