@@ -34,12 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
-    # 'jazzmin'
-=======
-    'jazzmin',
-    
->>>>>>> 25a873d (loginPage updated)
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -163,19 +158,7 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-<<<<<<< HEAD
-# JAZZMIN_SETTINGS = {
-#     # title of the window (Will default to current_admin_site.site_title if absent or None)
-#     "site_title": "",
-=======
-# Specify the custom user model
-# AUTH_USER_MODEL = 'accounts.CustomUser'
 
-
-JAZZMIN_SETTINGS = {
-    # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "",
->>>>>>> 25a873d (loginPage updated)
 
 #     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
 #     "site_header": "RISK MANAGEMENT",
