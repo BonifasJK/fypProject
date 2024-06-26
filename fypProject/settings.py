@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_dyn_dt',
     'ckeditor',
     'django.contrib.postgres',
+    # 'udsm_risk_register.apps.UdsmRiskRegisterConfig',
 
 
     

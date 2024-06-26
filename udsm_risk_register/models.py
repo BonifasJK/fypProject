@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import Group
 
 UnitList = (
     ('Human Resource', 'Human Resource'),
@@ -99,6 +100,13 @@ class Risk(models.Model):
     mitigation = models.ForeignKey(Mitigation, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=StatusList)
     last_updated = models.DateTimeField(auto_now=True)
+    
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_staff or super().has_view_permission(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_staff or super().has_change_permission(request, obj)
+
 
     def __str__(self):
         return f"{self.title} reported by {self.reporter.get_full_name()}"

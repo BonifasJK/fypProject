@@ -116,6 +116,19 @@ class RiskAdmin(admin.ModelAdmin):
     list_max_show_all = 6
     list_display = ('title', 'get_reporter_full_name', 'Description', 'Details', 'status', 'likelihood', 'impact', 'mitigation')
     actions = ['export_as_excel_action', 'export_as_pdf_action']
+    
+    
+    def has_view_permission(self, request, obj=None):
+        if request.user.is_staff:
+            return True
+        return super().has_view_permission(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_staff:
+            return True
+        return super().has_change_permission(request, obj)
+    
+    
 
     def get_reporter_full_name(self, obj):
         return f"{obj.reporter.first_name} {obj.reporter.last_name}"
