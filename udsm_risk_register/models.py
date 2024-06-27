@@ -89,6 +89,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.get_full_name()
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.role:
+            group, created = Group.objects.get_or_create(name=self.role)
+            self.groups.add(group)
 
 class Risk(models.Model):
     title = models.CharField(max_length=200)
