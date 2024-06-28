@@ -14,6 +14,13 @@ import os, inspect
 import django_dyn_dt
 
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Define the path to the .env file
+env_path = Path('../../env')  # Adjust this path if necessary
+
+# Load environment variables from the .env file
+load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -170,7 +177,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "RISK MANAGEMENT",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    # "site_logo": "books/img/logo.png",
+    "site_logo": "vendor/adminlte/img/AdminLTELogo.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
     "login_logo": "vendor/adminlte/img/mwenge1.png",
@@ -182,7 +189,7 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "img-circle",
 
     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": None,
+    "site_icon": "vendor/adminlte/img/AdminLTELogo.png",
 
     # Welcome text on the login screen
     "welcome_sign": "RISK MANAGEMENT",
