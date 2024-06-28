@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-!g%rlr55w-@opi(&#uh2z7j!bzcoep#2((j)t7)cgrqk=$0bhz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -172,7 +172,7 @@ JAZZMIN_SETTINGS = {
     # "site_logo": "books/img/logo.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "vendor/adminlte/img/AdminLTELogo1.png",
+    "login_logo": "vendor/adminlte/img/mwenge1.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
     "login_logo_dark": None,
@@ -348,3 +348,24 @@ DYNAMIC_DATATB = {
 MIGRATION_MODULES = {}
 
 AUTH_USER_MODEL = 'udsm_risk_register.User'
+
+# smtp server configuration
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # Gmail SMTP port (TLS)
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False  # SSL is not used for Gmail SMTP
+
+EMAIL_HOST_USER = 'esamwel893@gmail.com'
+EMAIL_HOST_PASSWORD = 'nivkkcpfsamjtugt'
+
+# session configuration
+
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# SESSION_COOKIE_AGE = 360
+# SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_SAMESITE = 'Lax'
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+

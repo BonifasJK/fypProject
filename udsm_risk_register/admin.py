@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from django.http import HttpResponse
 from io import BytesIO
 import pandas as pd
@@ -19,7 +20,7 @@ class CustomUserAdmin(BaseUserAdmin):
     model = User
     add_fieldsets = (
         (None, {
-            'fields': ('username', 'password1', 'password2', 'first_name', 'last_name', 'role', 'unit'),
+            'fields': ('username','email', 'password1', 'password2', 'first_name', 'last_name', 'role', 'unit'),
         }),
     )
     fieldsets = (
@@ -111,6 +112,7 @@ def export_all_as_pdf(request):
     return export_as_pdf(queryset)
 
 # Risk admin
+
 class RiskAdmin(admin.ModelAdmin):
     list_per_page = 6
     list_max_show_all = 6
@@ -157,6 +159,17 @@ class RiskAdmin(admin.ModelAdmin):
             {'url': 'export/pdf/', 'label': 'Export All as PDF'},
         ]
         return super().changelist_view(request, extra_context=extra_context)
+
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if not obj:  # if creating a new instance
+            current_user = request.user
+            full_name = current_user.get_full_name() if current_user.get_full_name() else current_user.username
+            form.base_fields['reporter'].initial = full_name  # Set initial value to the current user's full name
+            form.base_fields['reporter'].widget = admin.widgets.AdminTextInputWidget()  # Use TextInput widget
+            form.base_fields['reporter'].disabled = True  # Disable the input field
+        return form
 
 admin.site.register(models.Risk, RiskAdmin)
 

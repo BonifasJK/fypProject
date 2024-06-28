@@ -27,9 +27,11 @@ Role = (
 )
 
 StatusList = (
+    ('Submitted', 'Submitted'),
     ('Active', 'Active'),
     ('Pending', 'Pending'),
-    ('Completed', 'Completed'),
+    ('Resolved', 'Resolved'),
+    ('Closed', 'Closed')
 )
 
 impacts = (
@@ -72,6 +74,7 @@ class RiskDetails(models.Model):
         return self.Causes
 
 class User(AbstractUser):
+    email = models.EmailField() 
     id = models.AutoField(primary_key=True, default=None)
     role = models.CharField(max_length=25, choices=Role, null=True)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True)
