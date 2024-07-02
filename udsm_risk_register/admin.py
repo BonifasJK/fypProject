@@ -37,29 +37,30 @@ class CustomUserAdmin(BaseUserAdmin):
 admin.site.register(User, CustomUserAdmin)
 
 # Export functions
-def export_as_excel(queryset):
-    model = queryset.model
-    meta = model._meta
-    field_names = [field.name for field in meta.fields]
 
+def export_as_excel(queryset):
     data = []
-    for obj in queryset:
-        row = {}
-        for field in field_names:
-            value = getattr(obj, field)
-            if isinstance(value, datetime):
-                value = make_naive(value)
-            row[field] = value
+    for risk in queryset:
+        row = {
+            'Title': risk.title,
+            'Description': risk.Description,
+            'Reporter': f"{risk.reporter.first_name} {risk.reporter.last_name}",
+            'Unit': risk.reporter.unit if hasattr(risk.reporter, 'unit') else '',
+            'Mitigation': f"Mitigation: {risk.mitigation.mitigation}\nEffectiveness: {risk.mitigation.effectiveness}\nWeakness: {risk.mitigation.weakness}",
+            # Add more fields as needed
+        }
         data.append(row)
 
     df = pd.DataFrame(data)
-    
+    if 'last_updated' in df.columns:
+        df.drop(columns=['last_updated'], inplace=True)
+
     with BytesIO() as buffer:
         with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name="Sheet1", index=False)
         buffer.seek(0)
         response = HttpResponse(buffer, content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = f'attachment; filename={meta.verbose_name_plural}.xlsx'
+        response['Content-Disposition'] = 'attachment; filename="risks_export.xlsx"'
         return response
 
 def export_as_pdf(queryset):
@@ -113,25 +114,13 @@ def export_all_as_pdf(request):
 
 # Risk admin
 
+
 class RiskAdmin(admin.ModelAdmin):
     list_per_page = 6
     list_max_show_all = 6
     list_display = ('title', 'get_reporter_full_name', 'Description', 'Details', 'status', 'likelihood', 'impact', 'mitigation')
     actions = ['export_as_excel_action', 'export_as_pdf_action']
     
-    
-    def has_view_permission(self, request, obj=None):
-        if request.user.is_staff:
-            return True
-        return super().has_view_permission(request, obj)
-
-    def has_change_permission(self, request, obj=None):
-        if request.user.is_staff:
-            return True
-        return super().has_change_permission(request, obj)
-    
-    
-
     def get_reporter_full_name(self, obj):
         return f"{obj.reporter.first_name} {obj.reporter.last_name}"
     get_reporter_full_name.short_description = 'Reporter'
@@ -147,8 +136,8 @@ class RiskAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-        path('export/excel/', self.admin_site.admin_view(export_all_as_excel), name='risk_export_excel'),
-        path('export/pdf/', self.admin_site.admin_view(export_all_as_pdf), name='risk_export_pdf'),
+            path('export/excel/', self.admin_site.admin_view(export_all_as_excel), name='risk_export_excel'),
+            path('export/pdf/', self.admin_site.admin_view(export_all_as_pdf), name='risk_export_pdf'),
         ]
         return custom_urls + urls
 
@@ -160,16 +149,24 @@ class RiskAdmin(admin.ModelAdmin):
         ]
         return super().changelist_view(request, extra_context=extra_context)
 
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super().get_form(request, obj, **kwargs)
+    #     if not obj:  # if creating a new instance
+    #         form.base_fields['reporter'].widget = admin.widgets.AdminTextInputWidget()  # Use TextInput widget
+    #         form.base_fields['reporter'].disabled = True  # Disable the input field
+    #     return form
+    def save_model(self, request, obj, form, change):
+        if not obj.reporter_id:
+            obj.reporter = request.user
+        super().save_model(request, obj, form, change)
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         if not obj:  # if creating a new instance
-            current_user = request.user
-            full_name = current_user.get_full_name() if current_user.get_full_name() else current_user.username
-            form.base_fields['reporter'].initial = full_name  # Set initial value to the current user's full name
-            form.base_fields['reporter'].widget = admin.widgets.AdminTextInputWidget()  # Use TextInput widget
-            form.base_fields['reporter'].disabled = True  # Disable the input field
+            # Set choices for reporter field with only current user
+            form.base_fields['reporter'].queryset = form.base_fields['reporter'].queryset.filter(pk=request.user.pk)
         return form
+
 
 admin.site.register(models.Risk, RiskAdmin)
 

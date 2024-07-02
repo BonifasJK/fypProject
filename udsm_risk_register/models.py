@@ -49,6 +49,11 @@ ids = (
     ('C4', 'C4'),
 )
 
+effectiveness = (
+    ('Effective', 'Effective'),
+    ('Partial Effective', 'Partial Effective'),
+    ('Ineffective', 'Ineffective')
+)
 class Unit(models.Model):
     Unit_id = models.AutoField(primary_key=True, null=False)
     Units = models.CharField(max_length=100, choices=UnitList)
@@ -58,8 +63,8 @@ class Unit(models.Model):
 
 class Mitigation(models.Model):
     id = models.AutoField(primary_key=True)
-    mitigation = models.CharField(max_length=400)
-    effectiveness = models.CharField(max_length=400)
+    mitigation = models.TextField(max_length=400)
+    effectiveness = models.CharField(max_length=400, choices=effectiveness)
     weakness = models.CharField(max_length=400)
 
     def __str__(self):
@@ -101,7 +106,7 @@ class User(AbstractUser):
 
 class Risk(models.Model):
     title = models.CharField(max_length=200)
-    Description = models.CharField(max_length=400)
+    Description = models.TextField(max_length=400)
     Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE)
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     likelihood = models.CharField(max_length=50, choices=impacts)
