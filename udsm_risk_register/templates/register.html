@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Register</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .strategic-objective, .risk-title, .risk-category, .risk-id, .residual-risk-rating, .risk-description,
+        .probability, .impact, .status, .mitigation-plan, .contingency-plan, .principle-owner, .supporting-owner {
+            padding: 10px;
+        }
+        .filter-container {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .filter-container label {
+            margin-right: 10px;
+        }
+        .filter-container select, .filter-container input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .filter-container button {
+            padding: 10px 20px;
+            background-color: #128062;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .filter-container button:hover {
+            background-color: #0b4b3e;
+        }
+    </style>
+</head>
+<body>
+    <h1>Risk Register</h1>
+
+    <div class="filter-container">
+        <div>
+            <label for="category-filter">Category:</label>
+            <select id="category-filter">
+                <option value="">All</option>
+                <option value="Governance">Governance</option>
+                <option value="Health safety and welfare">Health Safety and Welfare</option>
+                <option value="Fraud and corruption">Fraud and Corruption</option>
+                <option value="Research & consultancy">Research & Consultancy</option>
+                <option value="Academic">Academic</option>
+                <option value="Compliance">Compliance</option>
+                <option value="Human capital">Human Capital</option>
+                <option value="ICT">ICT</option>
+                <option value="Gender">Gender</option>
+                <option value="Infrastructure Management">Infrastructure Management</option>
+                <option value="Operational">Operational</option>
+                <!-- Add more categories as needed -->
+            </select>
+
+            <label for="date-filter">Date Range:</label>
+            <input type="date" id="start-date" name="start-date">
+            <span>to</span>
+            <input type="date" id="end-date" name="end-date">
+        </div>
+
+        <div>
+            <button onclick="filterTable()">Apply Filters</button>
+            <button onclick="resetFilters()">Reset Filters</button>
+        </div>
+    </div>
+
+    <table id="risk-table">
+        <thead>
+            <tr>
+                <th>Strategic Objective</th>
+                <th>Risk Title</th>
+                <th>Category</th>
+                <th>Risk ID</th>
+                <th>Residual Risk Rating</th>
+                <th>Description</th>
+                <th>Probability</th>
+                <th>Impact</th>
+                <th>Status</th>
+                <th>Mitigation Plan</th>
+                <th>Contingency Plan</th>
+                <th>Principle Owner</th>
+                <th>Supporting Owner(s)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example row, replace with your actual data -->
+            <tr>
+                <td class="strategic-objective">Increase market share</td>
+                <td class="risk-title">Market expansion delays</td>
+                <td class="risk-category">Operational</td>
+                <td class="risk-id">R001</td>
+                <td class="residual-risk-rating">Medium</td>
+                <td class="risk-description">Delays in regulatory approvals may hinder market entry timelines.</td>
+                <td class="probability">Medium</td>
+                <td class="impact">High</td>
+                <td class="status">Active</td>
+                <td class="mitigation-plan">Engage regulatory consultants to expedite approval process.</td>
+                <td class="contingency-plan">Explore alternative markets if delays exceed 3 months.</td>
+                <td class="principle-owner">Jane Smith</td>
+                <td class="supporting-owner">John Doe, Sarah Lee</td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+
+    <script>
+        function filterTable() {
+            var categoryFilter = document.getElementById('category-filter').value;
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+
+            var rows = document.getElementById('risk-table').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var category = row.getElementsByClassName('risk-category')[0].textContent.trim();
+                var date = row.getElementsByClassName('risk-id')[0].textContent.trim();
+
+                var dateInRange = true;
+                if (startDate && endDate) {
+                    var riskDate = new Date(date);
+                    var start = new Date(startDate);
+                    var end = new Date(endDate);
+
+                    dateInRange = riskDate >= start && riskDate <= end;
+                }
+
+                var categoryMatches = categoryFilter === '' || category === categoryFilter;
+
+                if (categoryMatches && dateInRange) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('category-filter').value = '';
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+
+            var rows = document.getElementById('risk-table').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].style.display = '';
+            }
+        }
+    </script>
+   
+</body>
+</html>

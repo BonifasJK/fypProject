@@ -1,7 +1,8 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import Group
+
 
 UnitList = (
     ('Human Resource', 'Human Resource'),
@@ -21,17 +22,28 @@ UnitList = (
     ('IKS', 'IKS'),
 )
 
+categories = (
+    ('Governance', 'Governance'),
+    ('Health Safety and welfare', 'Health Safety and welfare'),
+    ('Fraud and Corruption', 'Fraud and Corruption'),
+    ('Research and consultancy', 'Research and consultancy'),
+    ('Academic', 'Academic'),
+    ('Compliance', 'Compliance'),
+    ('Human Capital', 'Human Capital'),
+    ('ICT', 'ICT'),
+    ('Gender', 'Gender'),
+    ('Infrastructure Management', 'Infrastructure Management'),
+    ('Operational', 'Operational')
+)
 Role = (
     ('RiskManager', 'RiskManager'),
     ('RiskChampion', 'RiskChampion'),
 )
 
 StatusList = (
-    ('Submitted', 'Submitted'),
-    ('Active', 'Active'),
-    ('Pending', 'Pending'),
-    ('Resolved', 'Resolved'),
-    ('Closed', 'Closed')
+    ('pending', 'pending'),
+    ('approved', 'approved'),
+
 )
 
 impacts = (
@@ -72,8 +84,8 @@ class Mitigation(models.Model):
 
 class RiskDetails(models.Model):
     id = models.AutoField(primary_key=True)
-    Causes = models.CharField(max_length=400)
-    consequences = models.CharField(max_length=500)
+    Causes = models.TextField(max_length=400)
+    consequences = models.TextField(max_length=500)
 
     def __str__(self):
         return self.Causes
@@ -105,16 +117,16 @@ class User(AbstractUser):
             self.groups.add(group)
 
 class Risk(models.Model):
-    title = models.CharField(max_length=200)
-    Description = models.TextField(max_length=400)
-    Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE)
+    RiskCategory = models.CharField(max_length=100, choices=categories, verbose_name='Risk Category', null=True)
+    title = models.CharField(max_length=200, verbose_name='Risk Title')
+    Description = models.CharField(max_length=400, verbose_name='Risk Description')
+    Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE, )
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     likelihood = models.CharField(max_length=50, choices=impacts)
     impact = models.CharField(max_length=30, choices=impacts)
-    mitigation = models.ForeignKey(Mitigation, on_delete=models.CASCADE)
-    status = models.CharField(max_length=10, choices=StatusList)
+    status = models.CharField(max_length=10, choices=StatusList, default='pending')
     last_updated = models.DateTimeField(auto_now=True)
-    
+    approving_manager = models.ForeignKey(User, related_name='approved_risks', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Approving manager')
     def has_view_permission(self, request, obj=None):
         return request.user.is_staff or super().has_view_permission(request, obj)
 

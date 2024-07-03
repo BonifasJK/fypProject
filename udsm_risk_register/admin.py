@@ -14,6 +14,8 @@ from datetime import datetime
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib import colors
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.urls import reverse
+from django.shortcuts import render
 
 # Custom User Admin
 class CustomUserAdmin(BaseUserAdmin):
@@ -41,25 +43,42 @@ admin.site.register(User, CustomUserAdmin)
 def export_as_excel(queryset):
     data = []
     for risk in queryset:
+        mitigation_details = {
+            'Mitigation': risk.mitigation.mitigation,
+            'Effectiveness': risk.mitigation.effectiveness,
+            'Weakness': risk.mitigation.weakness,
+        }
+
         row = {
             'Title': risk.title,
             'Description': risk.Description,
             'Reporter': f"{risk.reporter.first_name} {risk.reporter.last_name}",
             'Unit': risk.reporter.unit if hasattr(risk.reporter, 'unit') else '',
-            'Mitigation': f"Mitigation: {risk.mitigation.mitigation}\nEffectiveness: {risk.mitigation.effectiveness}\nWeakness: {risk.mitigation.weakness}",
+            # 'Risk Details': f"{risk.riskdetails.Causes}  {risk.riskdetails.consequences}",
+            'Mitigation/control': mitigation_details['Mitigation'],
+            'Effectiveness': mitigation_details['Effectiveness'],
+            'Weakness': mitigation_details['Weakness']
             # Add more fields as needed
         }
         data.append(row)
 
     df = pd.DataFrame(data)
+
+
+    
     if 'last_updated' in df.columns:
         df.drop(columns=['last_updated'], inplace=True)
 
+   
+
     with BytesIO() as buffer:
         with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-            df.to_excel(writer, sheet_name="Sheet1", index=False)
+            df.to_excel(writer, sheet_name='Sheet1', index=False)
+
+
+    
         buffer.seek(0)
-        response = HttpResponse(buffer, content_type='application/vnd.ms-excel')
+        response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="risks_export.xlsx"'
         return response
 
@@ -118,8 +137,8 @@ def export_all_as_pdf(request):
 class RiskAdmin(admin.ModelAdmin):
     list_per_page = 6
     list_max_show_all = 6
-    list_display = ('title', 'get_reporter_full_name', 'Description', 'Details', 'status', 'likelihood', 'impact', 'mitigation')
-    actions = ['export_as_excel_action', 'export_as_pdf_action']
+    list_display = ('title', 'get_reporter_full_name', 'Description', 'Details', 'status', 'likelihood', 'impact', 'approving_manager')
+    actions = ['export_as_excel_action','approve_selected_risks']
     
     def get_reporter_full_name(self, obj):
         return f"{obj.reporter.first_name} {obj.reporter.last_name}"
@@ -167,6 +186,29 @@ class RiskAdmin(admin.ModelAdmin):
             form.base_fields['reporter'].queryset = form.base_fields['reporter'].queryset.filter(pk=request.user.pk)
         return form
 
+    def approve_selected_risks(self, request, queryset):
+        for risk in queryset:
+            if risk.status == 'pending':
+                # Assign approving manager to the current user (Risk Manager)
+                risk.status = 'approved'
+                risk.approving_manager = request.user
+                risk.registered = True  # Mark as registered
+                risk.save()
+                self.message_user(request, f"Risk '{risk.title}' has been approved and registered.")  # Optional: Provide feedback message
+
+                # Render risk_register.html from template in virtualenv
+                context = {
+                    'risk': risk
+                }
+                return render(request, 'registration/register.html', context)
+
+    approve_selected_risks.short_description = "Approve selected risks"
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if not request.user.groups.filter(name='RiskManager').exists():
+            del actions['approve_selected_risks']
+        return actions
 
 admin.site.register(models.Risk, RiskAdmin)
 

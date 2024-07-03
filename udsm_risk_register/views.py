@@ -60,6 +60,7 @@ def login(request):
     return render(request, 'login.html', {'form': form})
 
 
+
 # def is_staff_user(user):
 #     return user.is_staff
 
@@ -89,3 +90,6 @@ def login(request):
     queryset = Risk.objects.all()
     table = RiskTable(queryset)
     return render(request, 'udsm_risk_register/risk_template.html', {'table': table})
+
+#  def register(request):
+#      return render(request, 'udsm_risk_register/register.html')
