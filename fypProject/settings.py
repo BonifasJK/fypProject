@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     'django_dyn_dt',
     'ckeditor',
     'django.contrib.postgres',
+    'django_extensions'
+    # 'background_task',
+    # 'django_celery_beat',
     # 'udsm_risk_register.apps.UdsmRiskRegisterConfig',
 
 
@@ -62,6 +65,22 @@ INSTALLED_APPS = [
  
    
 ]
+
+# Q_CLUSTER = {
+#     'name': 'DjangORM',
+#     'workers': 4,
+#     'recycle': 500,
+#     'timeout': 60,
+#     'retry': 120,
+#     'queue_limit': 50,
+#     'bulk': 10,
+#     'orm': 'default'
+# }
+
+# # Celery settings
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
@@ -222,6 +241,9 @@ JAZZMIN_SETTINGS = {
 
         # App with dropdown menu to all its models pages (Permissions checked against models)
         {"app": "books"},
+        
+        # Add a custom link fo
+        {"name": "Books", "url": "/path/to/books", "new_window": False},
     ],
 
     #############
@@ -289,7 +311,7 @@ JAZZMIN_SETTINGS = {
     # Related Modal #
     #################
     # Use modals instead of popups
-    "related_modal_active": False,
+    "related_modal_active": True,
 
     #############
     # UI Tweaks #

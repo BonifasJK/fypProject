@@ -117,10 +117,16 @@ class User(AbstractUser):
             self.groups.add(group)
 
 class Risk(models.Model):
+<<<<<<< HEAD
     RiskCategory = models.CharField(max_length=100, choices=categories, verbose_name='Risk Category', null=True)
     title = models.CharField(max_length=200, verbose_name='Risk Title')
     Description = models.CharField(max_length=400, verbose_name='Risk Description')
     Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE, )
+=======
+    Risk_title = models.CharField(max_length=200)
+    Description = models.CharField(max_length=400)
+    Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE)
+>>>>>>> 3be35839 (heatmap uploaded)
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     likelihood = models.CharField(max_length=50, choices=impacts)
     impact = models.CharField(max_length=30, choices=impacts)

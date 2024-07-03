@@ -137,8 +137,13 @@ def export_all_as_pdf(request):
 class RiskAdmin(admin.ModelAdmin):
     list_per_page = 6
     list_max_show_all = 6
+<<<<<<< HEAD
     list_display = ('title', 'get_reporter_full_name', 'Description', 'Details', 'status', 'likelihood', 'impact', 'approving_manager')
     actions = ['export_as_excel_action','approve_selected_risks']
+=======
+    list_display = ('Risk_title', 'get_reporter_full_name', 'Description', 'Details', 'status', 'likelihood', 'impact', 'mitigation')
+    actions = ['export_as_excel_action', 'export_as_pdf_action']
+>>>>>>> 3be35839 (heatmap uploaded)
     
     def get_reporter_full_name(self, obj):
         return f"{obj.reporter.first_name} {obj.reporter.last_name}"
