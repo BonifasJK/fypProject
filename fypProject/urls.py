@@ -1,10 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+<<<<<<< HEAD
 from django.conf import settings
 from django.conf.urls.static import static
 from jazzmin import settings as jazzmin_settings
 
+=======
+ 
+>>>>>>> 3be35839 (heatmap uploaded)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,5 +20,9 @@ urlpatterns = [
     path('risk-register/', auth_views.register_view, name='register'),
     # Include URLs from other apps if needed
     path('', include("udsm_risk_register.urls")),
+    path('udsm_risk_register/', include('udsm_risk_register.urls')),
+    
+  
     
 ]
+

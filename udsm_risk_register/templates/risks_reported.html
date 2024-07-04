@@ -1,0 +1,52 @@
+{%extends 'base.html'%} 
+{%load static%} 
+
+{%block content%}
+
+<div id="heatmap"></div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% comment %} <script>
+    var data = [
+        {
+            z: [[5, 4, 3, 2, 1],
+                [5, 4, 3, 2, 1],
+                [5, 4, 3, 2, 1],
+                [5, 4, 3, 2, 1],
+                [5, 4, 3, 2, 1]],
+            type: 'heatmap',
+            colorbar: {
+                title: 'Risk Level'
+            }
+        }
+    ];
+
+    var layout = {
+        title: 'Risk Heat-Map showing the Overall Risk Profile for UDSM',
+        xaxis: {
+            title: 'Impact',
+            tickvals: [0, 1, 2, 3, 4],
+            ticktext: ['Very low (1)', 'Low (2)', 'Moderate (3)', 'High (4)', 'Very High (5)'],
+        },
+        yaxis: {
+            title: 'Likelihood',
+            tickvals: [0, 1, 2, 3, 4],
+            ticktext: ['Rare (1)', 'Unlikely (2)', 'Medium (3)', 'Likely (4)', 'Almost Certain (5)'],
+        },
+        // Adjust height and width here
+        height: 600,
+        width: 800,
+        // Optionally, make it responsive
+        // responsive: true,
+    };
+
+    Plotly.newPlot('heatmap', data, layout);
+</script> {% endcomment %}
+
+<div>
+    {{ chart | safe }}
+</div>
+</script>
+
+{%endblock%}
+

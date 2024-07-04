@@ -6,7 +6,8 @@ class UdsmRiskRegisterConfig(AppConfig):
     name = 'udsm_risk_register'
     
     def ready(self):
-        # Import and run the permission setup
+    # Import and run the permission setup
         from .permissions import setup_permissions
         setup_permissions()
     verbose_name = 'UDSM RISK MANAGEMENT'
+ 
