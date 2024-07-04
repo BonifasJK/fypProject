@@ -22,6 +22,14 @@ UnitList = (
     ('IKS', 'IKS'),
 )
 
+Objectives =(
+    ('A', 'A'),
+    ('B', 'B'),
+    ('C', 'C'),
+    ('D', 'D'),
+    ('E', 'E')
+)
+
 categories = (
     ('Governance', 'Governance'),
     ('Health Safety and welfare', 'Health Safety and welfare'),
@@ -117,13 +125,16 @@ class User(AbstractUser):
             self.groups.add(group)
 
 class Risk(models.Model):
+    Objective = models.CharField(max_length=20, choices=Objectives, verbose_name='Objective Code', null=True)
     RiskCategory = models.CharField(max_length=100, choices=categories, verbose_name='Risk Category', null=True)
     title = models.CharField(max_length=200, verbose_name='Risk Title')
+    RiskID = models.CharField(max_length=20, verbose_name='Risk ID', null=True, unique=True, blank=True)
     Description = models.CharField(max_length=400, verbose_name='Risk Description')
-    Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE, )
+    Details = models.ForeignKey(RiskDetails, on_delete=models.CASCADE, verbose_name='Risk Details')
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     likelihood = models.CharField(max_length=50, choices=impacts)
     impact = models.CharField(max_length=30, choices=impacts)
+    Priority = models.CharField(max_length=50, null=True, blank=True)
     status = models.CharField(max_length=10, choices=StatusList, default='pending')
     last_updated = models.DateTimeField(auto_now=True)
     approving_manager = models.ForeignKey(User, related_name='approved_risks', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Approving manager')
@@ -132,6 +143,62 @@ class Risk(models.Model):
 
     def has_change_permission(self, request, obj=None):
         return request.user.is_staff or super().has_change_permission(request, obj)
+    
+    def calculate_risk_score(self):
+        # Map impact and likelihood to numerical values
+        impact_map = {
+            'Very Low': 1,
+            'Low': 2,
+            'Moderate': 3,
+            'High': 4,
+            'Very High': 5,
+        }
+        
+        likelihood_map = {
+            'Very Low': 1,
+            'Low': 2,
+            'Moderate': 3,
+            'High': 4,
+            'Very High': 5,
+        }
+        
+        # Calculate risk score
+        impact_value = impact_map.get(self.impact, 1)  # Default to 1 if not found
+        likelihood_value = likelihood_map.get(self.likelihood, 1)  # Default to 1 if not found
+        risk_score = impact_value * likelihood_value
+        return risk_score
+    
+    def determine_priority(self):
+        risk_score = self.calculate_risk_score()
+        
+        # Determine priority based on risk score
+        if risk_score <= 3:
+            return 'Very Low'
+        elif risk_score <= 8:
+            return 'Low'
+        elif risk_score <= 10:
+            return 'Moderate'
+        elif risk_score <= 15:
+            return 'High'
+        else:
+            return 'Very High'
+    
+    def save(self, *args, **kwargs):
+        if not self.RiskID:
+            # Calculate the next RiskID based on the Objective
+            last_id = Risk.objects.filter(Objective=self.Objective).order_by('-RiskID').first()
+            if last_id:
+                last_id = last_id.RiskID
+                prefix = self.Objective
+                num = int(last_id[len(prefix):]) + 1
+                new_id = f"{prefix}{num}"
+            else:
+                new_id = f"{self.Objective}1"
+            
+            self.RiskID = new_id
+        self.Priority = self.determine_priority() 
+        
+        super().save(*args, **kwargs)
 
 
     def __str__(self):

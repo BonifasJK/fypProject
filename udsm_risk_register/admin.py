@@ -15,7 +15,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib import colors
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import admin, messages
 
 # Custom User Admin
 class CustomUserAdmin(BaseUserAdmin):
@@ -137,7 +138,7 @@ def export_all_as_pdf(request):
 class RiskAdmin(admin.ModelAdmin):
     list_per_page = 6
     list_max_show_all = 6
-    list_display = ('title', 'get_reporter_full_name', 'Description', 'Details', 'status', 'likelihood', 'impact', 'approving_manager')
+    list_display = ('title', 'get_reporter_full_name', 'status', 'likelihood', 'impact', 'approving_manager')
     actions = ['export_as_excel_action','approve_selected_risks']
     
     def get_reporter_full_name(self, obj):
@@ -187,6 +188,7 @@ class RiskAdmin(admin.ModelAdmin):
         return form
 
     def approve_selected_risks(self, request, queryset):
+        approved_risks = []
         for risk in queryset:
             if risk.status == 'pending':
                 # Assign approving manager to the current user (Risk Manager)
@@ -194,13 +196,15 @@ class RiskAdmin(admin.ModelAdmin):
                 risk.approving_manager = request.user
                 risk.registered = True  # Mark as registered
                 risk.save()
-                self.message_user(request, f"Risk '{risk.title}' has been approved and registered.")  # Optional: Provide feedback message
+                approved_risks.append(risk)
 
-                # Render risk_register.html from template in virtualenv
-                context = {
-                    'risk': risk
-                }
-                return render(request, 'registration/register.html', context)
+        if approved_risks:
+            self.message_user(request, f"{len(approved_risks)} risk(s) have been approved and registered.", messages.SUCCESS)
+        else:
+            self.message_user(request, "No pending risks were selected to approve.", messages.WARNING)
+        
+        # Redirect to the risk changelist after approval
+        return redirect(reverse('admin:udsm_risk_register_risk_changelist'))
 
     approve_selected_risks.short_description = "Approve selected risks"
 
